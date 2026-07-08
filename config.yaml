@@ -1,0 +1,158 @@
+# Review Agent — Hermes profile configuration
+#
+# Part of the Hermes Research Curriculum at Bronx Science.
+# Authoritative source: https://github.com/ScottSavaiano/review-agent
+#
+# Ships alongside SOUL.md and distribution.yaml. On `hermes profile update`,
+# config.yaml is preserved by default; pass --force-config to reset it to the
+# repo version (and re-run student-install.sh to set terminal.cwd).
+#
+# NOTE: the agent cannot edit this file with its own tools (Hermes refuses
+# patch/write_file on config.yaml). Change settings with `hermes --profile
+# review-agent config set <key> <value>`. Edits apply on the next `/new` session.
+#
+# -------------------------------------------------------------------
+# Lineage: modeled on research-agent/config.yaml v0.2.0 (2026-07-01).
+# The model strategy is PROGRAM-WIDE (decision-history §11): Daily = Gemma 4 26B,
+# all aux pinned to Gemma, delegation pinned to Gemma, ZDR via account guardrails.
+# The ONE review-agent-specific difference from the mentor/research configs
+# (decided in the 2026-06-27 GLM-5.2 bake-off, decision-history §11):
+#   * careful/Wizard tier = **z-ai/glm-5.2** (NOT Kimi K2.6), served by **Io Net (fp8, ZDR)**.
+#     GLM-5.2 beat Opus 4.8 on the review functions at ~5x lower cost, and the
+#     cross-family pairing (Kimi-designed work reviewed by a GLM model) gives
+#     independent checking rather than a same-model echo. Mentor + research careful
+#     stay Kimi K2.6; only this profile's careful tier and its provider differ.
+# reasoning_effort: high and the Gemma delegation pin are PROGRAM-WIDE (decision-history §11).
+# -------------------------------------------------------------------
+# Version 0.1.0 (2026-07-08): first review-agent config. Pins mirror research-agent v0.2.0
+#   (15 aux on Gemma incl. background_review; delegation pinned to Gemma; reasoning_effort high)
+#   with the GLM-5.2 careful tier and the [nextbit, io-net] provider order above.
+
+# -------------------------------------------------------------------
+# Main model — Daily tier (Gemma 4 26B via OpenRouter)
+# -------------------------------------------------------------------
+# The everyday/startup model. Private (ZDR + account guardrails), low-cost.
+model:
+  provider: openrouter
+  default: google/gemma-4-26b-a4b-it
+  base_url: ''
+  api_mode: chat_completions
+  # Switches (picker or /model) are SESSION-ONLY — they do NOT rewrite this file.
+  persist_switch_by_default: false
+
+# -------------------------------------------------------------------
+# Reasoning — ON at full strength; hide the trace from students
+# -------------------------------------------------------------------
+# `agent.reasoning_effort: high` is program-wide (decision-history §11). It is global across
+# whatever model the picker selects. It strengthens the GLM-5.2 careful tier on hard review
+# calls but ALSO adds thinking-token cost on every Gemma daily turn (cannot be scoped
+# per-tier). On Gemma the cost is reasoning ON vs OFF (~2x completion), so 'high' costs
+# ~nothing over 'medium'. Never set it to `none` (disables thinking, dumbs the model down).
+# `display.show_reasoning: false` hides the recap from students (display-only; still reasons).
+agent:
+  reasoning_effort: high
+display:
+  show_reasoning: false
+
+# -------------------------------------------------------------------
+# Fallback model — single-shot rescue if the Daily model errors
+# -------------------------------------------------------------------
+# A different-vendor rescue (Gemma→Gemma is useless once Gemma is the main). GLM-5.2 is
+# already this profile's careful tier and is a different vendor from Gemma, so it doubles
+# as the rescue. ZDR via account-level enforcement.
+fallback_model:
+  provider: openrouter
+  model: z-ai/glm-5.2
+
+# -------------------------------------------------------------------
+# Provider routing — Gemma→NextBit; GLM-5.2→Io Net (fp8, ZDR)
+# -------------------------------------------------------------------
+# Top-level `provider_routing` (verified cli.py:3608) → OpenRouter `extra_body.provider`.
+# There is ONE `order` list per profile — a single global preferred-provider chain for ALL
+# models. OpenRouter picks the first listed provider that serves the requested model:
+#   - nextbit → Gemma daily. bf16, 99.7% uptime; serves Gemma but NOT GLM-5.2 — so it cannot
+#               hijack the GLM pin.
+#   - io-net  → GLM-5.2 careful. fp8, ZDR — chosen for quality + privacy at the review tier.
+# allow_fallbacks stays ON (default). Use `order`, NOT `only`.
+# CAVEAT — "one pin per profile": because `order` is global, a Gemma provider that ALSO
+# served GLM-5.2 would force GLM onto it and break the fp8 pin. NextBit (Gemma-only) avoids
+# that. Does NOT propagate to aux slots (independent, by Hermes design).
+provider_routing:
+  order:
+    - nextbit       # Gemma daily — bf16, 99.7% uptime; does NOT serve GLM-5.2 (keeps the pins separate)
+    - io-net        # GLM-5.2 careful — fp8, ZDR
+
+# -------------------------------------------------------------------
+# Model aliases — student vocabulary for /model
+# -------------------------------------------------------------------
+model_aliases:
+  default:
+    provider: openrouter
+    model: google/gemma-4-26b-a4b-it
+  careful:
+    provider: openrouter
+    model: z-ai/glm-5.2
+
+# -------------------------------------------------------------------
+# Delegation — the model subagents (delegate_task) run on
+# -------------------------------------------------------------------
+# PINNED to Gemma (program-wide defensive pin, decision-history §11). Any subagent calls run
+# cheap on gemma-4-26b regardless of the main tier — a /model careful escalation will NOT drag
+# them up to GLM-5.2. Verified delegate_tool.py: effective_model = delegation.model or
+# parent_agent.model.
+delegation:
+  provider: openrouter
+  model: google/gemma-4-26b-a4b-it
+
+# -------------------------------------------------------------------
+# Auxiliary task slots — all 15 pinned to Gemma 4 26B
+# -------------------------------------------------------------------
+# Pinned explicitly (not auto/inherit) so a `/model careful` upgrade never bleeds the
+# background jobs up to the Wizard tier. Hermes exposes 14 GUI/aux slots, PLUS
+# `background_review` (the post-turn self-improvement review), added program-wide 2026-07-01
+# from the v0.17.0 memory docs — it also defaults to auto/inherit, so without this pin a
+# `/model careful` session would run every post-turn review on the Wizard tier too.
+# NOTE: aux `curator` here is the aux-job *model* slot, distinct from the top-level
+# `curator.enabled` below; likewise `background_review` is the review job's *model*.
+auxiliary:
+  vision:             { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  web_extract:        { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  compression:        { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  skills_hub:         { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  approval:           { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  mcp:                { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  title_generation:   { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  tts_audio_tags:     { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  triage_specifier:   { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  kanban_decomposer:  { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  profile_describer:  { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  curator:            { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  monitor:            { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  session_search:     { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+  background_review:  { provider: openrouter, model: google/gemma-4-26b-a4b-it }
+
+# -------------------------------------------------------------------
+# Prompt caching — 1-hour TTL (Claude-only mechanism; moot here)
+# -------------------------------------------------------------------
+# Every tier here is non-Claude (Gemma / GLM-5.2), so nothing auto-caches. Harmless; kept
+# for consistency across profiles.
+prompt_caching:
+  cache_ttl: "1h"
+
+# -------------------------------------------------------------------
+# Terminal — shared workspace (student-install.sh rewrites cwd)
+# -------------------------------------------------------------------
+# Same student workspace as the mentor and research agent — all agents operate on one workspace.
+terminal:
+  backend: local
+  cwd: /CHANGE_ME/research-curriculum
+  timeout: 180
+
+# -------------------------------------------------------------------
+# Curator (top-level) — skill-pruning curator, disabled on student profiles
+# -------------------------------------------------------------------
+# Distinct from auxiliary.curator above (that's the model the curator job uses). This
+# switch disables the curator's skill-pruning (the `prune_builtins` behavior, default true;
+# v0.16.0+, re-confirmed v0.17.0) so rarely-invoked curriculum skills aren't pruned.
+curator:
+  enabled: false

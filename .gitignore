@@ -1,0 +1,4 @@
+.DS_Store
+.fuse_hidden*
+*.pyc
+__pycache__/

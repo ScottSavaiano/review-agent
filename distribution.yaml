@@ -1,0 +1,126 @@
+# Review Agent — Hermes profile distribution manifest
+#
+# Packages this profile as an installable Hermes agent. Anyone with access
+# to the GitHub repo can install the whole agent — SOUL, config, skills,
+# cron — with one command:
+#
+#     hermes profile install github.com/ScottSavaiano/review-agent --alias
+#
+# When the educator tags a new version, students run:
+#
+#     hermes profile update review-agent
+#
+# …and their installed review agent updates to the new SOUL and skills while
+# their own conversation history, memories, and config tuning are preserved.
+
+# -------------------------------------------------------------------
+# Identity
+# -------------------------------------------------------------------
+
+name: review-agent
+
+# Version follows semver. v0.x while the agent is still being built out;
+# v1.0.0 is reserved for the first release that ships all Tier-3 skills.
+version: 0.1.0
+# Changelog:
+#   0.1.0 (2026-07-08) — FIRST RELEASE — the full Tier-3 build (Phases A–D),
+#     design/review-agent-build-scope-2026-07-08.md. SOUL + config (careful tier =
+#     z-ai/glm-5.2 via Io Net; 15 aux + delegation pinned to Gemma). Skills:
+#     review-execution-plan (V7 pre-execution plan review), claim-verification (V5 fn2 / R11
+#     step-7 QC audit) — both writing dated files to reviews/; critique-decision (V5 fn1
+#     expert scientific/methodological review of the NON-WRITING artifacts only — never the
+#     student's prose) + coach-response-to-critique (acting on non-writing critique, never
+#     coaching the writing); update-journal (V1/V1a/V1a-ext/V2/V3 weekly reflection + the
+#     peppered STS-evidence calendar + application-evidence.md) with cron/weekly-reflection.json
+#     (V1b/V1c/V6 + the full maintain-bibliography verification); session-close-summary (V3b);
+#     the review-scoped redirect-off-topic (X5 parking → journals/parking-lot.md); and the
+#     re-bundled maintain-bibliography, project-briefing (review-seat tilt), check-budget, and
+#     fetch-articles; house-rules. Gates: review-soul clause-lint CLEAN; voice run clean of
+#     seeded violations (residual = accepted model drift); teacher-admin pre-publish critique
+#     applied (3 blocking fixed — the SOUL/skills swept to the non-writing STS ruling).
+#     Still v0.x while the agent is validated in class; v1.0.0 reserved for the class-hardened release.
+
+description: |
+  Review Agent — the quality check in the Hermes Research Curriculum at
+  Bronx Science. Reviews the science of a student's project (design,
+  analysis, interpretation) as a subject-matter expert, quality-checks the
+  other agents' work for AI errors and hallucinations by handing the student
+  concrete spot-checks to run themselves, and keeps the weekly reflection
+  habit. Never touches the student's writing (the STS AI line; decision-history §8.2). One of
+  three agents (with project-mentor and research-agent). Daily tier = Gemma 4
+  26B; careful tier = GLM-5.2 via /model careful.
+
+author: "Dr. Savaiano (Bronx High School of Science Social Science Research Program)"
+license: "MIT"
+
+# Minimum Hermes version. >=0.17.0 floor — matches the value the program standardized on
+# (primer §9) and the floor applied to the project-mentor and research-agent manifests.
+hermes_requires: ">=0.17.0"
+
+# -------------------------------------------------------------------
+# Environment variables required for install
+# -------------------------------------------------------------------
+# The installer checks these against the student's shell environment and
+# the profile's existing .env, then generates a .env.EXAMPLE the student
+# copies to .env and fills in. Each student receives a personalized
+# OpenRouter sub-key from the teacher (same key used across all profiles).
+
+env_requires:
+  - name: OPENROUTER_API_KEY
+    description: |
+      Your assigned OpenRouter sub-key for the Hermes Research
+      Curriculum. Issued by the research teacher during setup
+      (Lesson 1) under the cohort's single organization account.
+      Capped at the per-student semester budget. Do not share.
+    required: true
+
+# -------------------------------------------------------------------
+# Distribution-owned paths (defaults are fine; left explicit for clarity)
+# -------------------------------------------------------------------
+# By default, `hermes profile update` REPLACES these paths from the new
+# clone: SOUL.md, skills/, cron/, distribution.yaml. config.yaml
+# is special-cased — it is PRESERVED on update unless --force-config is
+# passed, so a student's machine-specific terminal.cwd survives updates.
+#
+# Excluded from the distribution entirely (Hermes hard-excludes these,
+# no override possible): .env, auth.json, memories/, sessions/, state.db*,
+# logs/, workspace/, plans/, home/, *_cache/, local/. The student's own
+# work and credentials never travel into or out of the repo.
+
+# Skill inventory (current — Phase A of the Tier-3 build, at v0.1.0):
+#
+#   skills/
+#     house-rules/SKILL.md             # standing editing-attribution convention
+#     review-execution-plan/SKILL.md   # V7 — pre-execution plan review → dated reviews/ *-plan-review.md
+#     claim-verification/SKILL.md       # V5 fn2 / R11 — step-7 QC audit + 3–5 spot-checks → dated reviews/ *-qc-audit.md
+#     redirect-off-topic/SKILL.md       # review-scoped off-topic parking (X5 weekly reflection — the list this agent keeps)
+#     check-budget/SKILL.md             # OpenRouter budget view (re-bundled)
+#     maintain-bibliography/SKILL.md    # shared working-bibliography maintenance + human-in-loop DOI verify (re-bundled)
+#                                       #   (+ co-bundled scripts/literature_discovery.py resolve engine)
+#     update-journal/SKILL.md           # V1/V1a/V1a-ext/V2/V3 weekly reflection (Phase B, authored 2026-07-08)
+#     session-close-summary/SKILL.md    # V3b shared per-session close-out receipt (Phase B, authored 2026-07-08)
+#     project-briefing/SKILL.md         # cross-agent session-open orientation (re-bundled, review-seat tilt; Phase B5)
+#     critique-decision/SKILL.md        # V5 fn1 expert scientific/methodological review of the NON-WRITING artifacts
+#                                        #   (proposal, initiation-setup outputs, execution plans/reports, decisions); never the paper
+#     coach-response-to-critique/SKILL.md # helps the student act on critique of the NON-WRITING work; never coaches writing revision
+#     fetch-articles/SKILL.md           # re-bundled for the weekly cron's V1c --convert-only corpus regen
+#   cron/
+#     weekly-reflection.json            # Friday cron: update-journal + V1c audit + maintain-bibliography + V6 snapshot + V1b push (disabled until educator enables)
+#
+# Phase B — COMPLETE (2026-07-08): update-journal (V1/V1a/V1a-ext/V2/V3 weekly workflow — the
+#           three-part spine + the peppered STS-prompt calendar + the STS evidence bank
+#           application-evidence.md), the weekly-reflection cron (cron/weekly-reflection.json:
+#           V1b/V1c/V6 + full maintain-bibliography verification), the X5 capture pipeline
+#           (journals/parking-lot.md, surfaced by update-journal), session-close-summary (V3b),
+#           and the project-briefing re-bundle (review-seat tilt). All in the skill list above.
+# Phase C — COMPLETE (2026-07-08): critique-decision (V5 fn1 expert scientific/methodological
+#           review of the NON-WRITING artifacts — proposal at seal, initiation-setup outputs,
+#           execution plans/reports, methodological decisions; NEVER the written paper) +
+#           coach-response-to-critique (helps the student act on critique of that non-writing work;
+#           never coaches writing revision). Educator STS ruling 2026-07-08: neither skill touches
+#           the student's writing at all — the science is reviewed through the artifacts, the writing
+#           goes to a human. The old "review-agent scaffold-section" is RETIRED (scaffold-section is
+#           single-homed in the mentor, R8/R10; Review Agent paper lane is comment-only, X2).
+# Not yet built (→ v1.0.0):
+#
+# No mcp.json in this distribution.
