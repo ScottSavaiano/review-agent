@@ -1,6 +1,6 @@
 ---
 name: project-briefing
-description: The student's orientation layer — the whole-project, cross-agent "where am I, what happened, what's next" briefing. Runs automatically at session open (on_session_start) and on demand ("catch me up," "where are we," "what should I do next"). Reads the shared workspace files (project_paper_status.md, decisions.md, the journals/, the workspace git history) and composes compile-working-paper's paper-coverage view into a short two-part brief: recent activity (last ~3 days / 3 sessions, across all three agents) and a recommended next step (a concrete, position-derived recommendation for where to start — navigational, not a substantive research recommendation). Bundled into all three student-facing profiles; tilts toward the agent the student is in while sharing one status core. It is the shared status engine the Review Agent's weekly journal opens with. Writes only its own dated briefings/ log — never project_paper_status.md, never the student's prose; makes no decisions and judges nothing. Status — draft, awaiting teacher-admin critique and educator review.
+description: The student's orientation layer — the whole-project, cross-agent "where am I, what happened, what's next" briefing. Runs automatically at session open (on_session_start) and on demand ("catch me up," "where are we," "what should I do next"). Reads the shared workspace files (project_paper_status.md, decisions.md, the journals/, the workspace git history) and composes paper-coverage's coverage view into a short two-part brief: recent activity (last ~3 days / 3 sessions, across all three agents) and a recommended next step (a concrete, position-derived recommendation for where to start — navigational, not a substantive research recommendation). Bundled into all three student-facing profiles; tilts toward the agent the student is in while sharing one status core. It is the shared status engine the Review Agent's weekly journal opens with. Writes only its own dated briefings/ log — never project_paper_status.md, never the student's prose; makes no decisions and judges nothing. Status — draft, awaiting teacher-admin critique and educator review.
 ---
 
 # Project Briefing
@@ -33,7 +33,7 @@ From the shared workspace (read-only):
 - **The `journals/` directory** — the Review Agent's weekly reflections; surfaces "last reflection was [date], N open items, you missed last week" (it *reads* the journal; it never does the journal's reflective work).
 - **The workspace git history** — the concrete record of what *files* changed recently and when (the basis for the "recent activity" window); reading those changes back as *agent-attributed activity* ("the research agent staged 3 articles") depends on a commit-message/attribution convention (open item 8), and degrades gracefully to a file-change summary without it.
 - **`project_design.md`** — the project's shape (research problem, current method-approach, research questions, gaps) for framing.
-- **`compile-working-paper`** — *called* for the paper-coverage slice (what's written / open, page count), which it folds into the brief rather than recomputing.
+- **`paper-coverage`** — *called* for the paper-coverage slice (what's written / open, page count), which it folds into the brief rather than recomputing.
 
 ## The two halves of the brief
 
@@ -61,7 +61,7 @@ It is also another **authentic-process artifact** for the STS trail (a dated rec
 
 One clean chain, each layer leaning on the one below and adding only its own value:
 
-**`compile-working-paper`** (mechanical paper coverage) **→ `project-briefing`** (whole-project, cross-agent orientation + the dated log) **→ the Review Agent's weekly journal** (opens with a briefing for the status core, then adds the reflective layer — completed/to-do tracking, where-you-left-off continuity, missed-session summaries, open items, and the targeted writing prompts that generate the student's Regeneron-essay material; V1 / V1a / V1a-ext).
+**`paper-coverage`** (read-only mechanical coverage) **→ `project-briefing`** (whole-project, cross-agent orientation + the dated log) **→ the Review Agent's weekly journal** (opens with a briefing for the status core, then adds the reflective layer — completed/to-do tracking, where-you-left-off continuity, missed-session summaries, open items, and the targeted writing prompts that generate the student's Regeneron-essay material; V1 / V1a / V1a-ext).
 
 So the status view is **built once** (here) and reused — the journal never rebuilds it; it reflects on top of it.
 
@@ -102,7 +102,7 @@ Per the established convention: adapt wording to the student's project; preserve
 
 ## Where this skill lives in the architecture
 
-A **cross-agent supporting skill**, authored in the project-mentor build and **bundled into all three student-facing profiles** — the **research-agent copy built 2026-06-29** and the **review-agent copy built 2026-07-08 (Phase B5)** — now bundled into all three; a distribution obligation per spec §12. It reads the shared workspace files and the workspace git history, **calls `compile-working-paper`** for the paper slice, and writes only its own dated `briefings/` log. It is invoked automatically at `on_session_start`, on demand, and by the Review Agent's weekly journal as its status on-ramp. **Not** a rationale trigger and **not** a model-escalation moment.
+A **cross-agent supporting skill**, authored in the project-mentor build and **bundled into all three student-facing profiles** — the **research-agent copy built 2026-06-29** and the **review-agent copy built 2026-07-08 (Phase B5)** — now bundled into all three; a distribution obligation per spec §12. It reads the shared workspace files and the workspace git history, **calls `paper-coverage`** for the paper slice, and writes only its own dated `briefings/` log. It is invoked automatically at `on_session_start`, on demand, and by the Review Agent's weekly journal as its status on-ramp. **Not** a rationale trigger and **not** a model-escalation moment.
 
 ## Status
 

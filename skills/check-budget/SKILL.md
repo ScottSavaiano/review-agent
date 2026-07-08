@@ -6,11 +6,12 @@ description: Pull the student's current OpenRouter sub-key usage and remaining b
 # Check Budget
 
 **Last edited:** 2026-06-29 (Cowork — **re-bundled into the research-agent profile** from the project-mentor copy; delivery-voice neutralized ("the mentor" → "the agent") so the same file reads right in any profile; "Where this skill lives" updated. **Canonical source = the project-mentor copy; sync any change across profiles.**) Prior: (pre-2026-05-26 baseline state — authored 2026-05-24, edit history before the attribution convention's adoption not retroactively reconstructed)
+*Refreshed 2026-07-09 (Cowork): model tiers corrected to the current strategy (Gemma 4 26B daily; careful = z-ai/GLM-5.2); the dollar figures flagged pending re-verification; delivery voice localized to "the agent"; profile identity corrected. *
 *Editing convention: see `00-handoff.md` → "Editing conventions" for editor identifiers and revision-marker rules.*
 
 ## What this skill is
 
-This skill gives the student a clear, current picture of their OpenRouter sub-key budget — how much the educator has allocated to them, how much they have used (today, this week, this month), how much remains, and what the remaining amount translates to in practical curriculum terms (roughly how many more default-tier mentor sessions or careful-tier consultations they can run before hitting their limit).
+This skill gives the student a clear, current picture of their OpenRouter sub-key budget — how much the educator has allocated to them, how much they have used (today, this week, this month), how much remains, and what the remaining amount translates to in practical curriculum terms (roughly how many more default-tier sessions or careful-tier consultations they can run before hitting their limit).
 
 The budget mechanism: the educator administers an OpenRouter organization account with per-student sub-keys, each carrying a spending limit the educator sets (and adjusts on request via the pre-approval process described in `decision-history-and-rationale.md` Section 11.4 and Section 13). The sub-key's limit and current usage are visible via OpenRouter's `/api/v1/key` endpoint when called with the student's own key as the Authorization bearer. This skill makes that call and presents the result in human terms.
 
@@ -26,9 +27,9 @@ The skill also runs when the student types `/check-budget` directly in the TUI. 
 
 ## When this skill does NOT fire
 
-- The student is asking about cost in the abstract ("how much does Opus cost per turn?") rather than their specific remaining budget. That is a question for the agent to answer from the SOUL's "When to use a stronger model" section or from general knowledge, not a budget-check.
+- The student is asking about cost in the abstract ("how much does the careful tier cost per turn?") rather than their specific remaining budget. That is a question for the agent to answer from the SOUL's "When to use a stronger model" section or from general knowledge, not a budget-check.
 - The student is asking about the *project's* budget overall rather than their own (e.g., "how much is the school spending on this?"). That is an educator-side question, not a student-side one; the agent declines to speak for the school's overall ledger.
-- The student is mid-conversation on a research question and the skill would be a distraction. The mentor uses judgment — if a budget check would interrupt productive thinking, it can be deferred to a natural pause.
+- The student is mid-conversation on a research question and the skill would be a distraction. The agent uses judgment — if a budget check would interrupt productive thinking, it can be deferred to a natural pause.
 
 ## What this skill does
 
@@ -40,20 +41,20 @@ When the skill fires, it runs the bundled `scripts/check_budget.py` script, whic
 4. Computes the practical translations: `limit_remaining` ÷ typical-default-session-cost ≈ N more default-tier sessions; `limit_remaining` ÷ typical-careful-session-cost ≈ M more careful-tier consultations. The script prefers `limit_remaining` directly (which OpenRouter computes as the current-period remaining budget) over `limit - usage_total` (which would conflate the period-reset limit with the lifetime usage and silently undercount the student's remaining budget on a monthly-reset key).
 5. Prints a formatted summary to the agent's tool output.
 
-The mentor reads the tool output and delivers the summary to the student in its own voice — not by pasting the raw output, but by translating the numbers into language that matches the SOUL ("You have used $X.XX this month — most of it on the default tier — and you have $Y.YY remaining. At the rate you have been working, that is roughly N more default-tier sessions or M more careful-tier consultations").
+The agent reads the tool output and delivers the summary to the student in its own voice — not by pasting the raw output, but by translating the numbers into language that matches the SOUL ("You have used $X.XX this month — most of it on the default tier — and you have $Y.YY remaining. At the rate you have been working, that is roughly N more default-tier sessions or M more careful-tier consultations").
 
 ## What the typical-cost translations rest on
 
-The translations are heuristics, not promises. The skill uses curriculum-verified per-session cost estimates from `decision-history-and-rationale.md` Section 11.1:
+The translations are heuristics, not promises. **NOTE (2026-07-09 refresh): the specific dollar figures in this skill — including the register examples below — are inherited from the earlier Haiku/Opus tiers (§11.1) and are pending re-verification against the current Gemma-daily / careful-tier pricing; the script's constants are the source of truth, refreshed when `monitor-curriculum-models` flags a price change.** The current tiers:
 
-- **Default tier (Haiku 4.5, cached effective):** ~$0.047 per 10-turn mentor session with the curriculum's typical ~10K-token system prompt + workspace context.
-- **Careful tier (Opus 4.8, cached effective):** ~$0.23 per 10-turn high-judgment consultation.
+- **Default tier (Gemma 4 26B):** the everyday model — very low per-session cost (the free/near-free daily tier).
+- **Careful tier (z-ai/GLM-5.2):** the higher-judgment model — a higher per-session cost than the daily tier.
 
 These are session-shape averages, not exact predictions. The per-session estimate assumes the curriculum's typical session shape (about 10 turns, ~10K-token system prompt + workspace, ~500-token completions per turn). A student who routinely runs short consultations (3-4 turns) will see their actual cost-per-session run substantially below the estimate, and "N more sessions" will undercount their real remaining headroom. A student running long deep-work sessions (20+ turns) will burn through budget faster than the estimate predicts. The summary's mentor-voice framing makes the heuristic nature clear ("roughly," "at the rate you have been working"); the script does NOT yet personalize the estimate per-student based on their actual usage_daily ÷ daily-session-count. A future revision could pull that personalization in — for now, the unpersonalized estimate is the trade-off for keeping the skill simple. If the educator's `monitor-curriculum-models` skill (Tier 8) detects pricing changes for the curriculum's three models, the typical-cost values in this skill's script are updated in the same release.
 
 ## The output register
 
-The mentor's voice in delivering the budget summary should match the SOUL — direct, specific, not alarmist or congratulatory.
+The agent's voice in delivering the budget summary should match the SOUL — direct, specific, not alarmist or congratulatory.
 
 **Plenty remaining:**
 
@@ -67,7 +68,7 @@ The mentor's voice in delivering the budget summary should match the SOUL — di
 
 > "You are out of budget for the month — you have used $40 of $40. The next call would fail. To continue, you need to talk with your research teacher about additional budget."
 
-The mentor's tone is honest and useful — not moralizing about spending, not congratulating on frugality, not catastrophizing about running low.
+The agent's tone is honest and useful — not moralizing about spending, not congratulating on frugality, not catastrophizing about running low.
 
 ## Edge cases the script handles
 
@@ -79,9 +80,9 @@ The mentor's tone is honest and useful — not moralizing about spending, not co
 
 ## Where this skill lives in the architecture
 
-This is the **research-agent profile's copy** of `check-budget`, re-bundled from the project-mentor profile (2026-06-29) — same script, same behavior, bundled here so budget questions work regardless of which agent the student is in. Bundled status makes it student-unmodifiable, curator-protected, and refreshed by profile updates (`hermes-platform-primer.md` §7). The script lives at `skills/check-budget/scripts/check_budget.py`. **Canonical source = the project-mentor copy; sync any change across all profiles.**
+This is the **review-agent profile's copy** of `check-budget`, re-bundled from the project-mentor profile — same script, same behavior, bundled here so budget questions work regardless of which agent the student is in. Bundled status makes it student-unmodifiable, curator-protected, and refreshed by profile updates (`hermes-platform-primer.md` §7). The script lives at `skills/check-budget/scripts/check_budget.py`. **Canonical source = the project-mentor copy; sync any change across all profiles.**
 
-The **research-agent profile now ships this copy** (2026-06-29); the review-agent profile will ship the same when it is built — the same script and SKILL.md in each profile so it is available regardless of which agent the student is talking to.
+The **review-agent profile ships this copy** — the same script and SKILL.md across all three profiles so budget questions work regardless of which agent the student is in.
 
 ## Status
 

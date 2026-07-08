@@ -21,8 +21,13 @@ name: review-agent
 
 # Version follows semver. v0.x while the agent is still being built out;
 # v1.0.0 is reserved for the first release that ships all Tier-3 skills.
-version: 0.1.0
+version: 0.2.0
 # Changelog:
+#   0.2.0 (2026-07-09) — NEW shared read-only `paper-coverage` skill (coverage view + versions/ archival
+#     snapshot); `project-briefing` and the weekly cron's V6 now call `paper-coverage` (retired the V6
+#     mechanical-copy stopgap). SOUL: added the V3b session-close nod. `check-budget` refresh — model tiers
+#     corrected to Gemma 4 26B daily / z-ai/GLM-5.2 careful (dollar figures pending re-verification), delivery
+#     voice localized to "the agent", profile identity corrected.
 #   0.1.0 (2026-07-08) — FIRST RELEASE — the full Tier-3 build (Phases A–D),
 #     design/review-agent-build-scope-2026-07-08.md. SOUL + config (careful tier =
 #     z-ai/glm-5.2 via Io Net; 15 aux + delegation pinned to Gemma). Skills:
@@ -100,6 +105,8 @@ env_requires:
 #     update-journal/SKILL.md           # V1/V1a/V1a-ext/V2/V3 weekly reflection (Phase B, authored 2026-07-08)
 #     session-close-summary/SKILL.md    # V3b shared per-session close-out receipt (Phase B, authored 2026-07-08)
 #     project-briefing/SKILL.md         # cross-agent session-open orientation (re-bundled, review-seat tilt; Phase B5)
+#     paper-coverage/SKILL.md            # shared read-only paper coverage view + versions/ archival snapshot
+#                                        #   (the safe subset of the mentor's compile-working-paper; project-briefing + the cron call it)
 #     critique-decision/SKILL.md        # V5 fn1 expert scientific/methodological review of the NON-WRITING artifacts
 #                                        #   (proposal, initiation-setup outputs, execution plans/reports, decisions); never the paper
 #     coach-response-to-critique/SKILL.md # helps the student act on critique of the NON-WRITING work; never coaches writing revision
