@@ -3,12 +3,20 @@
 
 Reads OPENROUTER_API_KEY from the environment, calls
 GET https://openrouter.ai/api/v1/key, parses the per-key budget data,
-and prints a formatted summary that the mentor can read aloud.
+and prints a formatted summary that the agent can read aloud.
 
-Per-call cost translations rest on the curriculum's verified
-session-cost estimates from decision-history-and-rationale.md Section 11.1:
-  - Default tier (Haiku 4.5, cached effective): ~$0.047 per 10-turn session
-  - Careful tier (Opus 4.8, cached effective):  ~$0.232 per 10-turn consultation
+Per-call cost translations rest on OpenRouter's posted per-token pricing
+(cross-provider average, fetched 2026-07-09), applied to the curriculum's
+real session shape. Hermes re-sends the full system prompt (base + this
+profile's SOUL, ~4K tokens) on EVERY turn, and session-start workspace reads
+persist in the conversation history and are re-sent each turn too. Over a
+~10-turn session that bills ~277K input + ~5K output tokens. No prompt-
+caching discount is assumed (conservative; the pinned providers report no
+implicit caching), so these are worst-case:
+  - Default tier (Gemma 4 26B): ~$0.05 per 10-turn session
+  - Careful tier (GLM-5.2):     ~$0.41 per 10-turn consultation
+    (GLM-5.2 list rate ~$1.40/M in, ~$4.40/M out; the current $0.75/$2.37
+     headline is a temporary 46%-off promo, so budget on the list rate)
 If pricing changes (detected by the teacher-admin monitor-curriculum-models
 skill), update these constants in the same release.
 
@@ -27,12 +35,12 @@ import sys
 import urllib.error
 import urllib.request
 
-DEFAULT_TIER_PER_SESSION = 0.047   # Haiku 4.5 cached effective, ~10-turn
-CAREFUL_TIER_PER_SESSION = 0.232   # Opus 4.8 cached effective, ~10-turn
+DEFAULT_TIER_PER_SESSION = 0.05    # Gemma 4 26B, cross-provider avg, ~10-turn (uncached worst-case)
+CAREFUL_TIER_PER_SESSION = 0.41    # GLM-5.2 list rate, ~10-turn (uncached worst-case)
 
 ENDPOINT = "https://openrouter.ai/api/v1/key"
 USER_AGENT = "hermes-research-curriculum/0.2.0 (check-budget)"
-HTTP_REFERER = "https://github.com/ScottSavaiano/project-mentor"
+HTTP_REFERER = "https://github.com/ScottSavaiano/review-agent"
 
 
 def _fetch_key_info(api_key: str) -> dict:
@@ -99,8 +107,8 @@ def _format_summary(data: dict) -> str:
     careful_consults = int(remaining_f / CAREFUL_TIER_PER_SESSION) if remaining_f > 0 else 0
 
     lines.append("At curriculum-typical use rates, your remaining budget is:")
-    lines.append(f"  ~{default_sessions:,} more default-tier (Haiku 4.5) mentor sessions, OR")
-    lines.append(f"  ~{careful_consults:,} more careful-tier (Opus 4.8) consultations,")
+    lines.append(f"  ~{default_sessions:,} more default-tier (Gemma 4 26B) sessions, OR")
+    lines.append(f"  ~{careful_consults:,} more careful-tier (GLM-5.2) consultations,")
     lines.append("  in any mix.")
     lines.append("")
     lines.append("(Sessions vary in length and depth; treat the numbers as rough guidance,")

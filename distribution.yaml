@@ -21,8 +21,15 @@ name: review-agent
 
 # Version follows semver. v0.x while the agent is still being built out;
 # v1.0.0 is reserved for the first release that ships all Tier-3 skills.
-version: 0.2.0
+version: 0.2.1
 # Changelog:
+#   0.2.1 (2026-07-09) — `check-budget` cost re-verification. Dollar figures re-derived from
+#     OpenRouter's posted per-token pricing (cross-provider average) and costed on the REAL session
+#     shape — the full SOUL (~4K tok) is re-sent every turn and session-start workspace reads persist
+#     in history, so a ~10-turn session bills ~277K input + 5K output tokens. Uncached worst-case:
+#     default (Gemma 4 26B) ~$0.05/session, careful (GLM-5.2, on its list rate — the live 46%-off promo
+#     ignored for safety) ~$0.41/consultation. Script constants + SKILL register examples updated to
+#     match; HTTP-Referer localized to the review-agent repo. No behavioral change.
 #   0.2.0 (2026-07-09) — NEW shared read-only `paper-coverage` skill (coverage view + versions/ archival
 #     snapshot); `project-briefing` and the weekly cron's V6 now call `paper-coverage` (retired the V6
 #     mechanical-copy stopgap). SOUL: added the V3b session-close nod. `check-budget` refresh — model tiers
