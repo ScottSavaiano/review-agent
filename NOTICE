@@ -1,0 +1,33 @@
+Hermes Research Curriculum — review-agent
+Copyright (c) 2026 Dr. Savaiano, Bronx High School of Science Social Science Research Program.
+
+LICENSE
+-------
+This work is licensed under Creative Commons Attribution-NonCommercial-ShareAlike
+4.0 International (CC BY-NC-SA 4.0). The full legal code is in LICENSE, and at:
+    https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+In plain terms:
+  * You MAY use, copy, adapt, and share this curriculum — including for teaching.
+  * You MUST credit the author (BY).
+  * You MAY NOT use it for commercial purposes (NC).
+  * If you adapt and share it, your version MUST carry this same license (SA).
+
+Students and teachers: cloning and installing these profiles for coursework or for
+teaching is exactly the use this license is meant to permit. Nothing here restricts
+that.
+
+NOTE ON SCOPE
+-------------
+This repository is primarily curriculum content — agent SOULs, skills, and teaching
+documentation — with supporting utility scripts. CC licenses are designed for
+content rather than software, and Creative Commons does not recommend them for code.
+The license is applied here to the repository as a whole because the substance of
+the work is the curriculum. If you need to reuse a utility script as software under
+different terms, contact the author.
+
+HISTORY
+-------
+Earlier releases of the student profiles were published under the MIT License. That
+grant is irrevocable for versions already distributed under it; this license governs
+this and subsequent versions.

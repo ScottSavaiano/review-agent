@@ -21,8 +21,13 @@ name: review-agent
 
 # Version follows semver. v0.x while the agent is still being built out;
 # v1.0.0 is reserved for the first release that ships all Tier-3 skills.
-version: 0.2.1
+version: 0.2.2
 # Changelog:
+#   0.2.2 (2026-07-11) — LICENSE CHANGE: MIT -> CC BY-NC-SA 4.0. Free for any teacher or student
+#     to use and adapt, including for teaching; not for commercial resale; adaptations must stay
+#     open under the same license. Adds LICENSE (full legal code) + NOTICE. No behavioural change
+#     to the agent. The MIT grant on previously distributed versions is irrevocable and still
+#     stands for those versions.
 #   0.2.1 (2026-07-09) — `check-budget` cost re-verification. Dollar figures re-derived from
 #     OpenRouter's posted per-token pricing (cross-provider average) and costed on the REAL session
 #     shape — the full SOUL (~4K tok) is re-sent every turn and session-start workspace reads persist
@@ -63,7 +68,7 @@ description: |
   26B; careful tier = GLM-5.2 via /model careful.
 
 author: "Dr. Savaiano (Bronx High School of Science Social Science Research Program)"
-license: "MIT"
+license: "CC-BY-NC-SA-4.0"
 
 # Minimum Hermes version. >=0.17.0 floor — matches the value the program standardized on
 # (primer §9) and the floor applied to the project-mentor and research-agent manifests.
