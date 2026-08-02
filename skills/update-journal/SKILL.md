@@ -1,6 +1,6 @@
 ---
 name: update-journal
-description: The Review Agent's weekly journaling workflow (obligations V1 / V1a / V1a-ext / V2 / V3), owned by the Review Agent. Runs once a week (the Friday reflection). Three parts: (1) the week's record — a receipts-based summary reconstructed from git history + the week's decisions.md + the logs + bibliography changes, from which it proposes top-3 candidates in four buckets (accomplishments, decisions, open questions, next-week follow-ups); (2) the Reflection Paragraph the student writes in two halves — (a) a MANDATORY response to at least one STS essay/application-question prompt (this week's peppered prompt from the academic-year calendar, plus any stage-fired prompt that came due), with the relevant project artifacts surfaced as raw material, and (b) an open-write (free-write anything else, with the Top-3 lists as optional material — no required pick); (3) the current-cycle status read (initiation + current cycle only; finished cycles sealed; no future cycles; within-cycle progress; read-only vs project_paper_status.md, discrepancies surfaced to the mentor). The peppered STS prompts are the substance of the reflection and also accumulate in the separate always-accessible STS evidence bank (application-evidence.md). The agent prompts and surfaces material but NEVER composes the student's prose (§8.2). Journals push to the student's repo automatically, where the teacher can see them. Source of truth: design/weekly-journal-and-sts-evidence-2026-07-08.md. Status — DRAFT (Tier 3, Phase B; first draft 2026-07-08).
+description: The Review Agent's weekly journaling workflow (obligations V1 / V1a / V1a-ext / V2 / V3), owned by the Review Agent. Runs once a week (the Friday reflection). Three parts: (1) the week's record — a receipts-based summary reconstructed from workspace file history + the week's decisions.md + the logs + bibliography changes, from which it proposes top-3 candidates in four buckets (accomplishments, decisions, open questions, next-week follow-ups); (2) the Reflection Paragraph the student writes in two halves — (a) a MANDATORY response to at least one STS essay/application-question prompt (this week's peppered prompt from the academic-year calendar, plus any stage-fired prompt that came due), with the relevant project artifacts surfaced as raw material, and (b) an open-write (free-write anything else, with the Top-3 lists as optional material — no required pick); (3) the current-cycle status read (initiation + current cycle only; finished cycles sealed; no future cycles; within-cycle progress; read-only vs project_paper_status.md, discrepancies surfaced to the mentor). The peppered STS prompts are the substance of the reflection and also accumulate in the separate always-accessible STS evidence bank (application-evidence.md). The agent prompts and surfaces material but NEVER composes the student's prose (§8.2). Journals are written into the workspace, which syncs to the teacher's shared Google Drive view automatically (no push step). Source of truth: design/weekly-journal-and-sts-evidence-2026-07-08.md. Status — DRAFT (Tier 3, Phase B; first draft 2026-07-08).
 ---
 
 # Update Journal (weekly reflection — Review Agent V1)
@@ -14,19 +14,32 @@ The Review Agent's **weekly journaling workflow**. It runs once a week (the Frid
 
 It produces the week's `journals/<student-name>-<date>.md`, and it feeds a separate, always-accessible **STS evidence bank** (`application-evidence.md`) that the student builds across the 2.5 years.
 
-Two commitments shape everything below: the **peppered STS prompts are the substance of the reflection** (the student responds to at least one application-question prompt every week, so the evidence stays front-of-mind and the late scramble disappears), and the agent **never composes the student's prose** — it prompts, and it surfaces the student's own artifacts as raw material (§8.2). Journals are captured in the workspace and pushed to the student's repo automatically by the weekly cron (V1b), where the teacher can see them.
+Two commitments shape everything below: the **peppered STS prompts are the substance of the reflection** (the student responds to at least one application-question prompt every week, so the evidence stays front-of-mind and the late scramble disappears), and the agent **never composes the student's prose** — it prompts, and it surfaces the student's own artifacts as raw material (§8.2). Journals are written into the workspace, which lives in Google Drive (Mirror mode) and syncs to the teacher's shared view automatically — so the teacher can see them without any push step.
 
 ## The weekly run — three parts, in order
 
 ### Part 1 — the week's record (receipts)
 
 Reconstruct what actually happened this week and show it to the student, so they never face a blank page:
-- the git-backed workspace history (files written/changed, stages advanced);
+- the workspace file history (files written/changed, stages advanced);
 - the week's `decisions.md` entries;
 - the logs touched (`reviews/` plan-reviews and QC-audits, the Dataset Creation / Data Analysis / Data Validity logs);
 - bibliography changes (new ✗ entries, entries verified ✓).
 
 From this, propose **top-3 candidates in each of four buckets**: **accomplishments**, **decisions**, **open questions**, **next-week follow-ups**. This is *fodder* for Part 2 — the student will draw on it — not a deliverable to be filed on its own.
+
+**Two things must be swept up if they happened this week and are not yet in the journal:**
+
+**The data-policy check.** If `check-data-policy` ran this week (Stage 5, or a source/door change at Stage 18/22),
+its notes are sitting in `data/data-validity-log.md` and the student has not necessarily written them up. Surface
+them and ask for it — *in their own words*: which source, which door, what the policy actually says (quoted), what
+mode they are in, why that follows from the clause, and what it changes about how they work. It belongs in the
+journal the week it happened or soon after. Later it becomes a Methods sentence.
+
+**The prompt log and AI-use citation.** The weekly reflection carries both (R.1). If the agent wrote code this
+week, or helped identify a statistical test, or was used to develop an idea, the **Society for Science AI Use
+Table requires a log of the prompts** and an explicit citation of which portions were AI-generated. Not optional,
+and not something to reconstruct at the end of two years.
 
 ### Part 2 — the Reflection Paragraph (the student writes it)
 
@@ -151,7 +164,7 @@ Direct, warm without flattery; the writing is always the student's. Register sam
 
 ## Where this skill lives in the architecture
 
-Ships in the **review-agent profile** (the Review Agent owns the journal, V3). Invoked by the **weekly-reflection cron** (Phase B2), which wraps it with the closing acts — V1c corpus-integrity audit, the full `maintain-bibliography` verification, the V6 archival snapshot, and the V1b commit+push. Reads `journals/` and writes `journals/<student>-<date>.md` + appends `application-evidence.md`. Composes with `project-briefing` (the shared status engine the weekly journal opens with) and `maintain-bibliography`.
+Ships in the **review-agent profile** (the Review Agent owns the journal, V3). Invoked by the **weekly-reflection cron** (Phase B2), which wraps it with the closing acts — V1c corpus-integrity audit, the full `maintain-bibliography` verification, and the V6 archival snapshot. *(The former V1b weekly commit+push closing act is retired under the 2026-07-09 Drive-based-workspace decision — Drive Mirror sync is the teacher-visibility heartbeat now; see cross-agent-obligations V1b.)* Reads `journals/` and writes `journals/<student>-<date>.md` + appends `application-evidence.md`. Composes with `project-briefing` (the shared status engine the weekly journal opens with) and `maintain-bibliography`.
 
 ## Status
 

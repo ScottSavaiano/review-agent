@@ -21,8 +21,14 @@ name: review-agent
 
 # Version follows semver. v0.x while the agent is still being built out;
 # v1.0.0 is reserved for the first release that ships all Tier-3 skills.
-version: 0.2.2
+version: 0.3.0
 # Changelog:
+#   0.3.0 (2026-08-02) — DRIVE-MIRROR TRANSPORT CONVERSION. Student workspace moves off git/GitHub
+#     onto Google Drive for Desktop (Mirror). weekly-reflection cron: the V1b Friday commit+push step is
+#     removed — the journal is written into the mirrored workspace and Drive syncs it (teacher sees it via
+#     the shared folder). update-journal: the week's-record reconstruction reads workspace file changes, not
+#     git history; the "pushed to the repo" framing retired. project-briefing: file-change activity read.
+#     claim-verification reconciled to Drive-Mirror wording. No change to the reflection/STS-evidence design.
 #   0.2.2 (2026-07-11) — LICENSE CHANGE: MIT -> CC BY-NC-SA 4.0. Free for any teacher or student
 #     to use and adapt, including for teaching; not for commercial resale; adaptations must stay
 #     open under the same license. Adds LICENSE (full legal code) + NOTICE. No behavioural change
