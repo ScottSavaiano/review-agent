@@ -1,6 +1,6 @@
 ---
 name: update-journal
-description: The Review Agent's weekly journaling workflow (obligations V1 / V1a / V1a-ext / V2 / V3), owned by the Review Agent. Runs once a week (the Friday reflection). Three parts: (1) the week's record — a receipts-based summary reconstructed from workspace file history + the week's decisions.md + the logs + bibliography changes, from which it proposes top-3 candidates in four buckets (accomplishments, decisions, open questions, next-week follow-ups); (2) the Reflection Paragraph the student writes in two halves — (a) a MANDATORY response to at least one STS essay/application-question prompt (this week's peppered prompt from the academic-year calendar, plus any stage-fired prompt that came due), with the relevant project artifacts surfaced as raw material, and (b) an open-write (free-write anything else, with the Top-3 lists as optional material — no required pick); (3) the current-cycle status read (initiation + current cycle only; finished cycles sealed; no future cycles; within-cycle progress; read-only vs project_paper_status.md, discrepancies surfaced to the mentor). The peppered STS prompts are the substance of the reflection and also accumulate in the separate always-accessible STS evidence bank (application-evidence.md). The agent prompts and surfaces material but NEVER composes the student's prose (§8.2). Journals are written into the workspace, which syncs to the teacher's shared Google Drive view automatically (no push step). Source of truth: design/weekly-journal-and-sts-evidence-2026-07-08.md. Status — DRAFT (Tier 3, Phase B; first draft 2026-07-08).
+description: The Review Agent's weekly journaling workflow (obligations V1 / V1a / V1a-ext / V2 / V3), owned by the Review Agent. Runs once a week (the Friday reflection). Three parts: (1) the week's record — a receipts-based summary reconstructed from workspace file history + the week's decisions.md + the logs + bibliography changes, from which it proposes top-3 candidates in four buckets (accomplishments, decisions, open questions, next-week follow-ups); (2) the Reflection Paragraph the student writes in two halves — (a) a MANDATORY response to at least one STS essay/application-question prompt (this week's peppered prompt from the academic-year calendar, plus any stage-fired prompt that came due), with the relevant project artifacts surfaced as raw material, and (b) an open-write (free-write anything else, with the Top-3 lists as optional material — no required pick); (3) the current-cycle status read (activation + current cycle only; finished cycles sealed; no future cycles; within-cycle progress; read-only vs project_paper_status.md, discrepancies surfaced to the mentor). The peppered STS prompts are the substance of the reflection and also accumulate in the separate always-accessible STS evidence bank (application-evidence.md). The agent prompts and surfaces material but NEVER composes the student's prose (§8.2). Journals are written into the workspace, which syncs to the teacher's shared Google Drive view automatically (no push step). Source of truth: design/weekly-journal-and-sts-evidence-2026-07-08.md. Status — DRAFT (Tier 3, Phase B; first draft 2026-07-08).
 ---
 
 # Update Journal (weekly reflection — Review Agent V1)
@@ -53,7 +53,7 @@ The whole paragraph is the student's; the agent may ask one clarifying question 
 
 ### Part 3 — the current-cycle status read (V2)
 
-A plain-language milestone check: the initiation steps + the **current** cycle's stages and sections. Finished cycles show **sealed/done**; **future cycles are not listed** — whether a Cycle 2 or 3 happens is decided only after the current cycle's results, so nothing future is shown as "pending," and progress is reported **within-cycle only**, never as a percent of the whole project. Reconcile **read-only** against `project_paper_status.md`; if the student's sense of where things stand differs from the file, **surface the discrepancy for the mentor's next session** (M1) — do not silently change the file (this skill never writes `project_paper_status.md`).
+A plain-language milestone check: the activation steps + the **current** cycle's stages and sections. Finished cycles show **sealed/done**; **future cycles are not listed** — whether a Cycle 2 or 3 happens is decided only after the current cycle's results, so nothing future is shown as "pending," and progress is reported **within-cycle only**, never as a percent of the whole project. Reconcile **read-only** against `project_paper_status.md`; if the student's sense of where things stand differs from the file, **surface the discrepancy for the mentor's next session** (M1) — do not silently change the file (this skill never writes `project_paper_status.md`).
 
 ### The parking-lot review (X5)
 
@@ -69,9 +69,9 @@ A separate, persistent workspace file, always openable by the student ("show me 
 
 | Fires at | Prompt (working name) | STS item | Words |
 |---|---|---|---|
-| Initiation A (research problem) · Stage 11 | "Where my idea came from" | Q9 | 250 |
-| Initiation A · Stage 16 | "Why I'm doing this study" | Q12a | 200 |
-| Initiation B (methods setup) · Stage 14 | "How I designed it" | Q12b | 200 |
+| Project Activation A (research problem) · Stage 11 | "Where my idea came from" | Q9 | 250 |
+| Project Activation A · Stage 16 | "Why I'm doing this study" | Q12a | 200 |
+| Project Activation B (methods setup) · Stage 14 | "How I designed it" | Q12b | 200 |
 | Stage 5 · 18/22 | "What parts of data collection I did myself" (surface the 3 logs) | Q12c–d | 200 |
 | Stage 19/23 | "What I did in the analysis" (surface the 3 logs) | Q12e | 200 |
 | Stage 21/25 | "What I concluded and how I got there" | Q12f | 200 |
@@ -149,7 +149,7 @@ Direct, warm without flattery; the writing is always the student's. Register sam
 > "I've pulled the records so you're writing from your own work, not from memory. I won't write any of it for you — that's the one line I hold — but ask me anything about what's in these logs."
 
 **The status read (Part 3):**
-> "Last thing — where the project stands. You're in Cycle 1, on the core analysis stage; the initiation and your planning stages are done. I'm not counting future cycles, since whether there's a Cycle 2 depends on how this one lands. One mismatch with your status file — you have the core Results marked started, the file doesn't — I'll flag that for your mentor rather than change it myself."
+> "Last thing — where the project stands. You're in Cycle 1, on the core analysis stage; the activation and your planning stages are done. I'm not counting future cycles, since whether there's a Cycle 2 depends on how this one lands. One mismatch with your status file — you have the core Results marked started, the file doesn't — I'll flag that for your mentor rather than change it myself."
 
 **The parking-lot review (X5):**
 > "You parked three off-topic things this week — a Common App question, a stats-class problem, and 'find me a summer program.' Want to take any of them up on your own now, keep them parked, or drop them? Whatever you decide, I'll mark it — nothing here was lost, it just waited for the right moment, which is now."

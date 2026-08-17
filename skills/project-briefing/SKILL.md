@@ -28,7 +28,7 @@ It is **not** a rationale trigger and **not** a model-escalation moment — it r
 
 From the shared workspace (read-only):
 
-- **`project_paper_status.md`** — the live position tracker (current cycle, regime, within-cycle stage, seal status, per-section state, stale verdict, reference-article status). The project initiation sequence of "where you are."
+- **`project_paper_status.md`** — the live position tracker (current cycle, regime, within-cycle stage, seal status, per-section state, stale verdict, reference-article status). The project activation sequence of "where you are."
 - **`decisions.md`** — recent five-question decisions (what major choices were made lately).
 - **The `journals/` directory** — the Review Agent's weekly reflections; surfaces "last reflection was [date], N open items, you missed last week" (it *reads* the journal; it never does the journal's reflective work).
 - **Recent workspace file changes** — the concrete record of what *files* changed recently and when (file mtimes/content since the last briefing; the basis for the "recent activity" window); reading those changes back as *agent-attributed activity* ("the research agent staged 3 articles") is best-effort inference (open item 8), and degrades gracefully to a plain file-change summary.

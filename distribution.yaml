@@ -21,8 +21,20 @@ name: review-agent
 
 # Version follows semver. v0.x while the agent is still being built out;
 # v1.0.0 is reserved for the first release that ships all Tier-3 skills.
-version: 0.3.0
+version: 0.4.0
 # Changelog:
+#   0.4.0 (2026-08-03) — ARTICLE LIBRARY MOVES TO DRIVE; **no student GitHub account, ever.**
+#     `fetch-articles`: the canonical staging source is repointed from the PRIVATE
+#     `curriculum-articles` GitHub repository to a **class-restricted Drive folder**, reached through the
+#     Drive for Desktop mount the student already runs for their workspace. Staging is now a local file
+#     copy through the script's existing `--staging <dir>` flag — no clone, no git, no auth, no network.
+#     `fetch_articles.py` is UNCHANGED (byte-identical); this release is prose only.
+#     WHY: the private article repo was the last thing in the program that required a student to hold a
+#     GitHub account, and with it mandatory 2FA, an authenticator app and recovery codes for ~60 minors
+#     (2026-06-15 item). The 2026-08-03 educator ruling ELIMINATED the requirement rather than managing it.
+#     The repo survives as the teacher-side store and version history; students never touch it. Profile
+#     install/update is unaffected — it was always an anonymous clone of a PUBLIC repo.
+#     No pedagogical or behavioural change.
 #   0.3.0 (2026-08-02) — DRIVE-MIRROR TRANSPORT CONVERSION. Student workspace moves off git/GitHub
 #     onto Google Drive for Desktop (Mirror). weekly-reflection cron: the V1b Friday commit+push step is
 #     removed — the journal is written into the mirrored workspace and Drive syncs it (teacher sees it via
@@ -126,7 +138,7 @@ env_requires:
 #     paper-coverage/SKILL.md            # shared read-only paper coverage view + versions/ archival snapshot
 #                                        #   (the safe subset of the mentor's compile-working-paper; project-briefing + the cron call it)
 #     critique-decision/SKILL.md        # V5 fn1 expert scientific/methodological review of the NON-WRITING artifacts
-#                                        #   (proposal, initiation-setup outputs, execution plans/reports, decisions); never the paper
+#                                        #   (proposal, activation-setup outputs, execution plans/reports, decisions); never the paper
 #     coach-response-to-critique/SKILL.md # helps the student act on critique of the NON-WRITING work; never coaches writing revision
 #     fetch-articles/SKILL.md           # re-bundled for the weekly cron's V1c --convert-only corpus regen
 #   cron/
@@ -139,7 +151,7 @@ env_requires:
 #           (journals/parking-lot.md, surfaced by update-journal), session-close-summary (V3b),
 #           and the project-briefing re-bundle (review-seat tilt). All in the skill list above.
 # Phase C — COMPLETE (2026-07-08): critique-decision (V5 fn1 expert scientific/methodological
-#           review of the NON-WRITING artifacts — proposal at seal, initiation-setup outputs,
+#           review of the NON-WRITING artifacts — proposal at seal, activation-setup outputs,
 #           execution plans/reports, methodological decisions; NEVER the written paper) +
 #           coach-response-to-critique (helps the student act on critique of that non-writing work;
 #           never coaches writing revision). Educator STS ruling 2026-07-08: neither skill touches
